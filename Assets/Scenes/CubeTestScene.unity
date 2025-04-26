@@ -252,6 +252,7 @@ GameObject:
   - component: {fileID: 820658534}
   - component: {fileID: 820658533}
   - component: {fileID: 820658536}
+  - component: {fileID: 820658537}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -377,6 +378,24 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &820658537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820658532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7662b4ec444f7fa57841ee2c13cba397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1714008542}
+  distance: 5
+  xSpeed: 120
+  ySpeed: 120
+  yMinLimit: -20
+  yMaxLimit: 80
 --- !u!1 &1714008538
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,6 +410,7 @@ GameObject:
   - component: {fileID: 1714008539}
   - component: {fileID: 1714008543}
   - component: {fileID: 1714008544}
+  - component: {fileID: 1714008545}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -496,7 +516,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46c299c9556ea74ec9f8164fea8ca386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
 --- !u!54 &1714008544
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -524,6 +543,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1714008545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1714008538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346ab51ce440b994ea5af1a9241d062a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
 --- !u!1 &1772528739
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,7 +657,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.1059115, y: 1.9633679, z: -1.3323846}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

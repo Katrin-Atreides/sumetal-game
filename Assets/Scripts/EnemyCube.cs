@@ -23,14 +23,107 @@ public class EnemyCube : MonoBehaviour
     public float moveSpeed = 8.0f;
     public float edgeDistanceCheckCoef = 1.0f;
 
+    public Material AgMat;
+    public float AgMass;
+    public float AgSpeed;
+    public Material BiMat;
+    public float BiMass;
+    public float BiSpeed;
+    public Material CdMat;
+    public float CdMass;
+    public float CdSpeed;
+    public Material CuMat;
+    public float CuMass;
+    public float CuSpeed;
+    public Material PbMat;
+    public float PbMass;
+    public float PbSpeed;
+    public Material SnMat;
+    public float SnMass;
+    public float SnSpeed;
+    public Material TiMat; 
+    public float TiMass;
+    public float TiSpeed;
+
+    public MetalType currentMetal;
+    public string currentMetalName;
+
     protected Mode currentMode;
     protected MetalCube enemyCube;
     protected Rigidbody body;
     protected GameObject playerCube;
 
+    enum MetalType
+    {
+        Ag,
+        Bi,
+        Cd,
+        Cu,
+        Pb,
+        Sn,
+        Ti
+    }
+
+    public void ChangeMetal()
+    {
+        var currentMetal = (MetalType)(Random.Range((int)MetalType.Ag, (int)MetalType.Ti + 1);
+
+        if (currentMetal == MetalType.Ag)
+        {
+            currentMetalName = "Ag";
+            renderer.material = AgMat;
+            body.mass = AgMass;
+            moveSpeed = AgSpeed;
+        }
+        else if (currentMetal == MetalType.Bi)
+        {
+            currentMetalName = "Bi";
+            renderer.material = BiMat;
+            body.mass = BiMass;
+            moveSpeed = BiSpeed;
+        }
+        else if (currentMetal == MetalType.Cd)
+        {
+            currentMetalName = "Cd";
+            renderer.material = CdMat;
+            body.mass = CdMass;
+            moveSpeed = CdSpeed;
+        }
+        else if (currentMetal == MetalType.Cu)
+        {
+            currentMetalName = "Cu";
+            renderer.material = CuMat;
+            body.mass = CuMass;
+            moveSpeed = CuSpeed;
+        }
+        else if (currentMetal == MetalType.Pb)
+        {
+            currentMetalName = "Pb";
+            renderer.material = PbMat;
+            body.mass = PbMass;
+            moveSpeed = PbSpeed;
+        }
+        else if (currentMetal == MetalType.Sn)
+        {
+            currentMetalName = "Sn";
+            renderer.material = SnMat;
+            body.mass = SnMass;
+            moveSpeed = SnSpeed;
+        }
+        else if (currentMetal == MetalType.Ti)
+        {
+            currentMetalName = "Ti";
+            renderer.material = TiMat;
+            body.mass = TiMass;
+            moveSpeed = TiSpeed;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        ChangeMetal();
+
         currentMode = (Mode)(Random.Range((int)Mode.Stalk, (int)Mode.Chase + 1));
         enemyCube = GetComponent<MetalCube>();
         body = GetComponent<Rigidbody>();

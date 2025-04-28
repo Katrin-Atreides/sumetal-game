@@ -22,36 +22,22 @@ public class EnemyCube : MonoBehaviour
     public float stalkDistance = 10.0f;
     public float moveSpeed = 8.0f;
     public float edgeDistanceCheckCoef = 1.0f;
+    Renderer rend;
 
     public Material AgMat;
-    public float AgMass;
-    public float AgSpeed;
+    public float AgMass = 1.5f;
     public Material BiMat;
-    public float BiMass;
-    public float BiSpeed;
+    public float BiMass = 0.979f;
     public Material CdMat;
-    public float CdMass;
-    public float CdSpeed;
+    public float CdMass = 0.865f;
     public Material CuMat;
-    public float CuMass;
-    public float CuSpeed;
+    public float CuMass = 0.892f;
     public Material PbMat;
-    public float PbMass;
-    public float PbSpeed;
+    public float PbMass = 1.134f;
     public Material SnMat;
-    public float SnMass;
-    public float SnSpeed;
+    public float SnMass = 0.479f;
     public Material TiMat; 
-    public float TiMass;
-    public float TiSpeed;
-
-    public MetalType currentMetal;
-    public string currentMetalName;
-
-    protected Mode currentMode;
-    protected MetalCube enemyCube;
-    protected Rigidbody body;
-    protected GameObject playerCube;
+    public float TiMass = 0.45f;
 
     enum MetalType
     {
@@ -64,116 +50,124 @@ public class EnemyCube : MonoBehaviour
         Ti
     }
 
+    public string currentMetalName;
+
+    protected Mode currentMode;
+    protected MetalCube enemyCube;
+    protected Rigidbody body;
+    protected GameObject playerCube;
+
+    public bool isActive = false;
+
     public void ChangeMetal()
     {
-        var currentMetal = (MetalType)(Random.Range((int)MetalType.Ag, (int)MetalType.Ti + 1);
+        var currentMetal = (MetalType)(Random.Range((int)MetalType.Ag, (int)MetalType.Ti + 1));
 
         if (currentMetal == MetalType.Ag)
         {
             currentMetalName = "Ag";
-            renderer.material = AgMat;
+            rend.material = AgMat;
             body.mass = AgMass;
-            moveSpeed = AgSpeed;
         }
         else if (currentMetal == MetalType.Bi)
         {
             currentMetalName = "Bi";
-            renderer.material = BiMat;
+            rend.material = BiMat;
             body.mass = BiMass;
-            moveSpeed = BiSpeed;
         }
         else if (currentMetal == MetalType.Cd)
         {
             currentMetalName = "Cd";
-            renderer.material = CdMat;
+            rend.material = CdMat;
             body.mass = CdMass;
-            moveSpeed = CdSpeed;
         }
         else if (currentMetal == MetalType.Cu)
         {
             currentMetalName = "Cu";
-            renderer.material = CuMat;
+            rend.material = CuMat;
             body.mass = CuMass;
-            moveSpeed = CuSpeed;
         }
         else if (currentMetal == MetalType.Pb)
         {
             currentMetalName = "Pb";
-            renderer.material = PbMat;
+            rend.material = PbMat;
             body.mass = PbMass;
-            moveSpeed = PbSpeed;
         }
         else if (currentMetal == MetalType.Sn)
         {
             currentMetalName = "Sn";
-            renderer.material = SnMat;
+            rend.material = SnMat;
             body.mass = SnMass;
-            moveSpeed = SnSpeed;
         }
         else if (currentMetal == MetalType.Ti)
         {
             currentMetalName = "Ti";
-            renderer.material = TiMat;
+            rend.material = TiMat;
             body.mass = TiMass;
-            moveSpeed = TiSpeed;
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        ChangeMetal();
-
         currentMode = (Mode)(Random.Range((int)Mode.Stalk, (int)Mode.Chase + 1));
         enemyCube = GetComponent<MetalCube>();
         body = GetComponent<Rigidbody>();
-        playerCube = GameObject.FindGameObjectsWithTag("Player")[0]; 
+        playerCube = GameObject.FindWithTag("Player");
+        rend = GetComponent<Renderer>();
+
+        ChangeMetal();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // direction vector to player cube
-        var playerVector = playerCube.transform.position - enemyCube.transform.position;
-        var distance = playerVector.magnitude;
-        var direction = playerVector.normalized;
+        if (isActive) // if false the enemy ai won't work
+        {
 
-        var velocity = new Vector3(body.velocity.x, 0.0f, body.velocity.z);
-        
-        // edge check
-        // send ray down from calculated position - if no collision - retreat
-        if (!CastRayDownward(body.transform.position + velocity * edgeDistanceCheckCoef))
-        {
-            // if player won't be hit - move away from the edge
-            if (!WillHitPlayer(transform.position, body.velocity.normalized)) 
+            // direction vector to player cube
+            var playerVector = playerCube.transform.position - transform.position;
+            var distance = playerVector.magnitude;
+            var direction = playerVector.normalized;
+
+            var velocity = new Vector3(body.velocity.x, 0.0f, body.velocity.z);
+
+            // edge check
+            // send ray down from calculated position - if no collision - retreat
+            if (!CastRayDownward(body.transform.position + velocity * edgeDistanceCheckCoef))
             {
-                enemyCube.Move2D(Quaternion.LookRotation(velocity.normalized * -1), moveSpeed);
+                // if player won't be hit - move away from the edge
+                if (!WillHitPlayer(transform.position, body.velocity.normalized))
+                {
+                    enemyCube.Move2D(Quaternion.LookRotation(velocity.normalized * -1), moveSpeed);
+                }
             }
-        }
-        // if no edge detected - continue as normal
-        else if (currentMode == Mode.Stalk)
-        {
-            if (distance <= stalkDistance)
+            // if no edge detected - continue as normal
+            else if (currentMode == Mode.Stalk)
             {
-                // move away
-                direction = direction * -1;
+                if (distance <= stalkDistance)
+                {
+                    // move away
+                    direction = direction * -1;
+                    enemyCube.Move2D(Quaternion.LookRotation(direction), moveSpeed);
+                }
+                else
+                {
+                    // switch mode to chase
+                    currentMode = Mode.Chase;
+                }
+            }
+            else if (currentMode == Mode.Chase)
+            {
+                // move as close as possible
                 enemyCube.Move2D(Quaternion.LookRotation(direction), moveSpeed);
             }
-            else 
-            {
-                // switch mode to chase
-                currentMode = Mode.Chase;
-            }
-        }
-        else if (currentMode == Mode.Chase)
-        {
-            // move as close as possible
-            enemyCube.Move2D(Quaternion.LookRotation(direction), moveSpeed);
-        }
 
-        // 20% chance to change mode to stalk
-        if (Random.Range(0, 100) < 20)
-            currentMode = Mode.Stalk;
+            // 20% chance to change mode to stalk
+            if (Random.Range(0, 100) < 10)
+                currentMode = Mode.Stalk;
+
+        }
     }
 
     bool CastRayDownward(Vector3 origin)
@@ -225,4 +219,5 @@ public class EnemyCube : MonoBehaviour
             return false;
         }
     }
+
 }

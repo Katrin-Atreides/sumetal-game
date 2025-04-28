@@ -14,6 +14,8 @@ public class CameraRotate : MonoBehaviour
     private float x = 0.0f;
     private float y = 0.0f;
 
+    public bool isActive = false;
+
     void Start()
     {
         Vector3 angles = transform.eulerAngles;
@@ -23,15 +25,18 @@ public class CameraRotate : MonoBehaviour
 
     void Update()
     {
-        x += Input.GetAxis("Mouse X") * xSpeed * distance * 0.02f;
-        y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
+        if (isActive)
+        {
+            x += Input.GetAxis("Mouse X") * xSpeed * distance * 0.02f;
+            y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
 
-        y = ClampAngle(y, yMinLimit, yMaxLimit);
-        Quaternion rotation = Quaternion.Euler(y, x, 0);
-        Vector3 position = rotation * new Vector3(0.0f, 0.0f, -distance) + target.position;
+            y = ClampAngle(y, yMinLimit, yMaxLimit);
+            Quaternion rotation = Quaternion.Euler(y, x, 0);
+            Vector3 position = rotation * new Vector3(0.0f, 0.0f, -distance) + target.position;
 
-        transform.rotation = rotation;
-        transform.position = position;
+            transform.rotation = rotation;
+            transform.position = position;
+        }
     }
 
     float ClampAngle(float angle, float min, float max)
